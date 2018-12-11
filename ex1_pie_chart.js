@@ -1,14 +1,14 @@
 function drawPieSlice(ctx,centerX, centerY, radiusX, radiusY, startAngle, endAngle, color, isStrokeRadius){
     ctx.fillStyle = color;
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = color;
     ctx.beginPath();
     if(isStrokeRadius) {
       ctx.moveTo(centerX,centerY);      
     }
     ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, startAngle, endAngle); 
     ctx.closePath();
+    ctx.stroke();
     ctx.fill(); 
-    ctx.stroke(); 
 }
 
 var Piechart = function(options){
@@ -96,8 +96,8 @@ var Piechart = function(options){
         }
         
         //3D bottom
-        this.ctx.lineWidth = 2;
-        this.ctx.fillStyle = this.colors[0];
+        this.ctx.fillStyle = "#456aa4";
+        this.ctx.strokeStyle = "#456aa4";
         this.ctx.beginPath();
         this.ctx.globalCompositeOperation = "destination-over";
         this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
@@ -108,16 +108,18 @@ var Piechart = function(options){
         var y1 = this.canvas.height/2 + line_more + elip_halfheight*Math.sin(endAndgle_pass);
         this.ctx.lineTo(x1,y1 - line_more);
         this.ctx.closePath(); 
-        this.ctx.stroke();
+        this.ctx.stroke()
         this.ctx.fill();
         
-        this.ctx.lineWidth = 2;
-        this.ctx.fillStyle = this.colors[1];
+        /////////////////        
+        this.ctx.fillStyle = "#a65344";
+        this.ctx.strokeStyle = "#a65344";
         this.ctx.beginPath();
         this.ctx.globalCompositeOperation = "destination-over";
         this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
         this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);
         
+
         this.ctx.ellipse(this.canvas.width/2, this.canvas.height/2 + line_more, elip_halfwidth, elip_halfheight, 0, startAndgle_fail, endAndgle_fail);
         var x2 = this.canvas.width/2 + elip_halfwidth*Math.cos(endAndgle_fail);
         var y2 = this.canvas.height/2 + line_more + elip_halfheight*Math.sin(endAndgle_fail);
