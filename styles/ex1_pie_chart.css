@@ -1,0 +1,33 @@
+.graph{
+  position: relative;
+  left: 22%;
+}
+
+#graphDiv{
+  position: relative;
+}
+
+.axis__y__title{
+    position: absolute;
+    top: 57%;
+    left: -12%;
+    z-index: 10;
+    transform: rotate(270deg);
+    font-weight: bold;
+    font-style: italic;
+    font-size: 28px;
+    color: #a4a4a4;
+    font-family: Calibri, san-serif;
+}
+
+.axis__x__title{
+    position: absolute;
+    top: 101%;
+    left: 14%;
+    z-index: 10;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 28px;
+    color: #a4a4a4;
+    font-family: Calibri, san-serif;
+}
