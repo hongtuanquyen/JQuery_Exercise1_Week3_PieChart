@@ -1,10 +1,8 @@
-function drawPieSlice(ctx,centerX, centerY, radiusX, radiusY, startAngle, endAngle, color, isStrokeRadius){
+function drawPieSlice(ctx,centerX, centerY, radiusX, radiusY, startAngle, endAngle, color){
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.beginPath();
-    if(isStrokeRadius) {
       ctx.moveTo(centerX,centerY);      
-    }
     ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, startAngle, endAngle); 
     ctx.closePath();
     ctx.stroke();
@@ -25,6 +23,7 @@ var Piechart = function(options){
     var isStrokeRadius = true;
     var elip_halfwidth = 250;
     var elip_halfheight = 70;
+
     this.draw = function(){
         var total_value = 0;
         var color_index = 0;
@@ -40,11 +39,7 @@ var Piechart = function(options){
             val = this.options.data[categ];
             var slice_angle = 2 * Math.PI * val / total_value;
             
-
-            
-            if(val === 0 || val === total_value) {
-                isStrokeRadius = false;
-            }
+            if(categ === "Khong dat") {
             drawPieSlice(
                 this.ctx,
                 this.canvas.width/2,
@@ -57,7 +52,7 @@ var Piechart = function(options){
                 isStrokeRadius
             );
             
-
+            }
             if(categ === "Dat") {
                 endAndgle_pass = start_angle+slice_angle;
                 endAndgle_pass_top = start_angle+slice_angle;
@@ -80,6 +75,7 @@ var Piechart = function(options){
         
 
         //3D top
+/*
         if(endAndgle_pass_top > 1.5*Math.PI) {
             var x1 = this.canvas.width/2 + elip_halfwidth*Math.cos(endAndgle_pass_top);
             var y1 = this.canvas.height/2 + elip_halfheight*Math.sin(endAndgle_pass_top);
@@ -94,8 +90,9 @@ var Piechart = function(options){
             this.ctx.stroke();    
             this.ctx.fill();
         }
-        
+*/
         //3D bottom
+        /*
         this.ctx.fillStyle = "#456aa4";
         this.ctx.strokeStyle = "#456aa4";
         this.ctx.beginPath();
@@ -110,22 +107,84 @@ var Piechart = function(options){
         this.ctx.closePath(); 
         this.ctx.stroke()
         this.ctx.fill();
-        
-        /////////////////        
-        this.ctx.fillStyle = "#a65344";
-        this.ctx.strokeStyle = "#a65344";
-        this.ctx.beginPath();
-        this.ctx.globalCompositeOperation = "destination-over";
-        this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
-        this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);
-        
+        */
+        /////////////////   
+        if(startAndgle_fail <= 0.5*Math.PI) {
+            var x2 = this.canvas.width/2 + elip_halfwidth*Math.cos(startAndgle_fail);
+            var y2 = this.canvas.height/2 + elip_halfheight*Math.sin(startAndgle_fail);
+            this.ctx.fillStyle = "#a65344";
+            this.ctx.strokeStyle = "#a65344";
+            this.ctx.beginPath();
+            this.ctx.globalCompositeOperation = "destination-over";
 
-        this.ctx.ellipse(this.canvas.width/2, this.canvas.height/2 + line_more, elip_halfwidth, elip_halfheight, 0, startAndgle_fail, endAndgle_fail);
-        var x2 = this.canvas.width/2 + elip_halfwidth*Math.cos(endAndgle_fail);
-        var y2 = this.canvas.height/2 + line_more + elip_halfheight*Math.sin(endAndgle_fail);
-        this.ctx.lineTo(x2,y2 - line_more);
-        this.ctx.closePath(); 
-        this.ctx.stroke();
-        this.ctx.fill();  
+            this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
+            this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);
+            this.ctx.lineTo(this.canvas.width/2, this.canvas.height/2 + line_more);
+            this.ctx.lineTo(this.canvas.width/2, this.canvas.height/2);
+            this.ctx.closePath(); 
+            this.ctx.stroke();
+            this.ctx.fill(); 
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(x2, y2);
+            this.ctx.lineTo(x2, y2 + line_more);
+            this.ctx.ellipse(this.canvas.width/2, this.canvas.height/2 + line_more, elip_halfwidth, elip_halfheight, 0, startAndgle_fail, endAndgle_fail);
+            this.ctx.lineTo(50, this.canvas.height/2); // 50 là từ cạnh trái canvas đến gragh
+            this.ctx.closePath(); 
+            this.ctx.stroke();
+            this.ctx.fill();  
+        }
+        /////////////
+        if(startAndgle_fail > Math.PI && startAndgle_fail < 1.5*Math.PI) {
+            var x2 = this.canvas.width/2 + elip_halfwidth*Math.cos(startAndgle_fail);
+            var y2 = this.canvas.height/2 + elip_halfheight*Math.sin(startAndgle_fail);
+            this.ctx.fillStyle = "#a65344";
+            this.ctx.strokeStyle = "#a65344";
+            this.ctx.beginPath();
+            this.ctx.globalCompositeOperation = "destination-over";
+            this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
+            this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);  
+            this.ctx.lineTo(this.canvas.width/2 , this.canvas.height/2 + line_more);  
+            this.ctx.lineTo(x2 , y2 + line_more);   
+            this.ctx.lineTo(x2 , y2);   
+            this.ctx.stroke();
+            this.ctx.fill();
+        }
+        /////////////
+        if(startAndgle_fail >  1.5*Math.PI) {
+            this.ctx.fillStyle = "#a65344";
+            this.ctx.strokeStyle = "#a65344";
+            this.ctx.beginPath();
+            this.ctx.globalCompositeOperation = "destination-over";
+            this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
+            this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);  
+            this.ctx.lineTo(this.canvas.width/2 , this.canvas.height/2 + line_more);  
+            this.ctx.lineTo(this.canvas.width/2 , this.canvas.height/2);     
+            this.ctx.stroke();
+            this.ctx.fill();
+            
+            
+            
+        }
+        /////////////////   
+        if(startAndgle_fail < Math.PI && startAndgle_fail > 0.5*Math.PI) {
+            var x2 = this.canvas.width/2 + elip_halfwidth*Math.cos(startAndgle_fail);
+            var y2 = this.canvas.height/2 + elip_halfheight*Math.sin(startAndgle_fail);
+            console.log(x2);
+            this.ctx.fillStyle = "#a65344";
+            this.ctx.strokeStyle = "#a65344";
+            this.ctx.beginPath();
+            this.ctx.globalCompositeOperation = "destination-over";
+
+            this.ctx.moveTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2);
+            this.ctx.lineTo(this.canvas.width/2 + elip_halfwidth, this.canvas.height/2 + line_more);
+            this.ctx.lineTo(this.canvas.width/2, this.canvas.height/2 + line_more);
+            this.ctx.lineTo(x2, y2 + line_more);
+            this.ctx.ellipse(this.canvas.width/2, this.canvas.height/2 + line_more, elip_halfwidth, elip_halfheight, 0, startAndgle_fail, endAndgle_fail);
+            this.ctx.lineTo(50, this.canvas.height/2); // 50 là từ cạnh trái canvas đến gragh
+            this.ctx.closePath(); 
+            this.ctx.stroke();
+            this.ctx.fill();  
+        }
     }
 }
