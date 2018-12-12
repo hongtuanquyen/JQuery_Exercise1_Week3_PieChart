@@ -1,4 +1,4 @@
 var myVinyls = {
-    "Dat": 90,
-    "Khong dat": 10
+    "Pass": 40,
+    "Fail": 60
 };

@@ -28,5 +28,5 @@ function canvasApp(){
       }
   );
    
-  myPiechart.draw();
+  myPiechart.drawChart();
 }
