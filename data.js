@@ -1,4 +1,4 @@
 var myVinyls = {
-    "Pass": 40,
-    "Fail": 60
+    "Pass": 20,
+    "Fail": 80
 };

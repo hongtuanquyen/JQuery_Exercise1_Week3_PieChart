@@ -1,44 +1,13 @@
-function calculateAngle(data, totalValue) {
-    var sliceAngle = [];
-    var i = 0;
-    var val;
-    for (var categ in data){
-        val = data[categ];
-        sliceAngle[i] = 2 * Math.PI * val / totalValue; 
-        i++;
-    }
-    return sliceAngle;
-}
-
-function drawCurve(ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2) {
-    ctx.fillStyle = color1;
-    if(i === 99) {
-        ctx.fillStyle = color2;
-    }
-    ctx.beginPath();
-    ctx.ellipse(centerX, centerY-i, radiusX, radiusY, 0, startAngle, endAngle);
-    ctx.lineTo(centerX, centerY-i);
-    ctx.fill();    
-}
-
-function isFailValueHigher(data) {
-    if( data["Fail"] > data["Pass"] ) {
-        return true;
-    }
-    return false;
-}
-
 var Piechart = function(options){
     this.options = options;
     this.canvas = options.canvas;
-    this.canvas.width = 600;
+    this.canvas.width = 900;
     this.canvas.height = 500;
     this.ctx = this.canvas.getContext("2d");
     this.colors = options.colors;
-    var that = this;
     var sliceAngle = [];
     var centerX = this.canvas.width/2;
-    var centerY = this.canvas.height/2;
+    var centerY = this.canvas.height/2 + 100;
     var radiusX = 250;
     var radiusY = 100;
     
@@ -70,5 +39,48 @@ var Piechart = function(options){
             // Draw fail curve
             drawCurve(this.ctx, i, centerX + deltaX, centerY + deltaY, radiusX, radiusY, endAnglePass, endAngleFail, "#a65344", this.colors[1]);   
         }
+    }
+    
+    this.drawLine = function(){
+        // var ptxPass = centerX + (radiusX-20)*Math.cos(endAngle[0]);
+        // var ptyPass = (centerY - 99) + (radiusY-20)*Math.sin(endAngle[0]);
+        // this.ctx.strokeStyle = this.colors[0];
+        // this.ctx.lineWidth = 5;
+        // this.ctx.beginPath();
+        // if(endAngle[0] <= Math.PI*0.5) {
+            // this.ctx.moveTo(centerX + radiusX - 2 , centerY - 99 + 2);  
+            // this.ctx.lineTo(centerX + radiusX + 100, (centerY - 99) -100);  
+        // }
+        // this.ctx.stroke();  
+    }
+    
+    function calculateAngle(data, totalValue) {
+        var sliceAngle = [];
+        var i = 0;
+        var val;
+        for (var categ in data){
+            val = data[categ];
+            sliceAngle[i] = 2 * Math.PI * val / totalValue; 
+            i++;
+        }
+        return sliceAngle;
+    }
+
+    function drawCurve(ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2) {
+        ctx.fillStyle = color1;
+        if(i === 99) {
+            ctx.fillStyle = color2;
+        }
+        ctx.beginPath();
+        ctx.ellipse(centerX, centerY-i, radiusX, radiusY, 0, startAngle, endAngle);
+        ctx.lineTo(centerX, centerY-i);
+        ctx.fill();    
+    }
+
+    function isFailValueHigher(data) {
+        if( data["Fail"] > data["Pass"] ) {
+            return true;
+        }
+        return false;
     }
 }
