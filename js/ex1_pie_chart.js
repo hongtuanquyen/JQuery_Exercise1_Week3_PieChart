@@ -32,7 +32,13 @@ var Piechart = function(options) {
         var deltaX;
         var deltaY;
 
-        
+        // Check the input data whether valid or not.
+        if((this.options.data["Pass"] + this.options.data["Fail"]) < 100 
+            || (this.options.data["Pass"] + this.options.data["Fail"]) > 100) {
+            alert("The sum of value is not 100. Please try input again.");
+            return;
+        }
+            
         // Calculate the total value of data
         for (var categ in this.options.data){
             var val = this.options.data[categ];
