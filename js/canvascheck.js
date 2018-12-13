@@ -21,7 +21,7 @@ function canvasApp(){
             width: 900,
             height: 600,
             canvas: theCanvas,
-            data: myVinyls,
+            data: dataArr,
             colors:["#009ed5","#e4322b"]
         }
     );

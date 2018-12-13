@@ -1,4 +1,4 @@
-var myVinyls = {
-    "Pass": 10,
-    "Fail": 90
+var dataArr = {
+    "Pass": 40,
+    "Fail": 60
 };
