@@ -1,5 +1,4 @@
-$( window ).on("load", eventWindowLoaded );
-
+window.onload = eventWindowLoaded;
 function eventWindowLoaded() {
     canvasApp();
 }
