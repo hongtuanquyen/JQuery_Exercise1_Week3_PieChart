@@ -30,5 +30,4 @@ function canvasApp(){
   );
    
   myPiechart.drawChart();
-  myPiechart.drawLine();
 }
