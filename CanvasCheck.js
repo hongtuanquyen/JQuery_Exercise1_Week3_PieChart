@@ -20,10 +20,11 @@ function canvasApp(){
   
   var myPiechart = new Piechart(
       {
+          context,
           width: 500,
           height: 500,
-          canvas:theCanvas,
-          data:myVinyls,
+          canvas: theCanvas,
+          data: myVinyls,
           colors:["#009ed5","#e4322b"]
       }
   );

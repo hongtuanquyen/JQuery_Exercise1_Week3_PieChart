@@ -3,7 +3,7 @@ var Piechart = function(options){
     this.canvas = options.canvas;
     this.canvas.width = 900;
     this.canvas.height = 500;
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = options.context;
     this.colors = options.colors;
     var sliceAngle = [];
     var centerX = this.canvas.width/2;
@@ -20,13 +20,13 @@ var Piechart = function(options){
         }
 
          
-        endAngle = calculateAngle(this.options.data, total_value);
+        endAngle = this.calculateAngle(this.options.data, total_value);
         var endAnglePass = endAngle[0];
         var endAngleFail = endAngle[0] + endAngle[1];
         var deltaX;
         var deltaY;
         for(var i = 0; i < 100; i++) {
-            if(isFailValueHigher(this.options.data)) { 
+            if(this.isFailValueHigher(this.options.data)) { 
                 deltaX = -15 ;
                 deltaY = -3;
             }
@@ -35,9 +35,9 @@ var Piechart = function(options){
                 deltaY = -5;  
             }
             // Draw pass curve
-            drawCurve(this.ctx, i, centerX, centerY, radiusX, radiusY, 0, endAnglePass, "#456aa4", this.colors[0]);
+            this.drawCurve(this.ctx, i, centerX, centerY, radiusX, radiusY, 0, endAnglePass, "#456aa4", this.colors[0]);
             // Draw fail curve
-            drawCurve(this.ctx, i, centerX + deltaX, centerY + deltaY, radiusX, radiusY, endAnglePass, endAngleFail, "#a65344", this.colors[1]);   
+            this.drawCurve(this.ctx, i, centerX + deltaX, centerY + deltaY, radiusX, radiusY, endAnglePass, endAngleFail, "#a65344", this.colors[1]);   
         }
     }
     
@@ -54,7 +54,7 @@ var Piechart = function(options){
         // this.ctx.stroke();  
     }
     
-    function calculateAngle(data, totalValue) {
+    this.calculateAngle = function(data, totalValue) {
         var sliceAngle = [];
         var i = 0;
         var val;
@@ -66,7 +66,7 @@ var Piechart = function(options){
         return sliceAngle;
     }
 
-    function drawCurve(ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2) {
+    this.drawCurve = function(ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2) {
         ctx.fillStyle = color1;
         if(i === 99) {
             ctx.fillStyle = color2;
@@ -77,7 +77,7 @@ var Piechart = function(options){
         ctx.fill();    
     }
 
-    function isFailValueHigher(data) {
+    this.isFailValueHigher = function(data) {
         if( data["Fail"] > data["Pass"] ) {
             return true;
         }
