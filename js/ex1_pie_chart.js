@@ -155,7 +155,7 @@ var Piechart = function(options) {
     /*
       Calculate angle of each data
       @param: data, totalValue
-      @return: N/A
+      @return: sliceAngle
     */       
     this.calculateAngle = function(data, totalValue) {
         var sliceAngle = [];
@@ -188,7 +188,7 @@ var Piechart = function(options) {
     /*
       Check if Fail value is higher than Pass value
       @param: data
-      @return: N/A
+      @return: true, false
     */  
     this.isFailValueHigher = function(data) {
         if(data["Fail"] > data["Pass"]) {
