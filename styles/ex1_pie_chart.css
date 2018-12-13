@@ -1,9 +1,3 @@
 .graph{
-  position: relative;
-  margin-top: 6%;
-  left: 25%;
-}
-
-#graphDiv{
-  position: relative;
+  margin-left: 25%;
 }

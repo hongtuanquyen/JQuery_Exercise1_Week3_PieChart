@@ -3,25 +3,35 @@ var Point = function(centerX, centerY) {
     this.pointY = centerY;    
 }
 
-var Piechart = function(options){
+var Piechart = function(options) {
     this.options = options;
     this.canvas = options.canvas;
     this.canvas.width = 900;
-    this.canvas.height = 500;
+    this.canvas.height = 600;
     this.ctx = options.context;
     this.colors = options.colors;
-    var sliceAngle = [];
-    var radiusX = 250;
+    var radiusX = 300;
     var radiusY = 100;
-  
+    var centerPass;
+    var centerFail;   
+    var endAnglePass;
+    var endAngleFail;
+    var middlePointCurvePass;
+    var middleRadiusPass;
+    var middlePointCurveFail;
+    var middleRadiusFail;
     
-    this.drawChart = function(){
+    /*
+      Draw Chart
+      @param: N/A
+      @return: N/A
+    */
+    this.drawChart = function() {
         var total_value = 0;
         var color_index = 0;
         var deltaX;
         var deltaY;
-        var centerPass;
-        var centerFail; 
+
         
         // Calculate the total value of data
         for (var categ in this.options.data){
@@ -31,8 +41,8 @@ var Piechart = function(options){
 
         // Calculate the endAngle for each data
         endAngle = this.calculateAngle(this.options.data, total_value);
-        var endAnglePass = endAngle[0];
-        var endAngleFail = endAngle[0] + endAngle[1];
+        endAnglePass = endAngle[0];
+        endAngleFail = endAngle[0] + endAngle[1];
         
         // Calculate shift point of fail curve 
         if(this.isFailValueHigher(this.options.data)) { 
@@ -48,14 +58,14 @@ var Piechart = function(options){
         centerPass = new Point(this.canvas.width/2, this.canvas.height/2 + 100);
         centerFail = new Point(this.canvas.width/2 + deltaX, this.canvas.height/2 + 100 + deltaY);
         
-        // 
-        var middlePointCurvePass = new Point(centerPass.pointX + radiusX*Math.cos(endAnglePass/2), 
-              (centerPass.pointY-99) + radiusY*Math.sin(endAnglePass/2));
-        var middleRadiusPass = new Point( (middlePointCurvePass.pointX + centerPass.pointX) / 2, (middlePointCurvePass.pointY + (centerPass.pointY-99)) / 2 );    
+        // Calculate the point to put line
+        middlePointCurvePass = new Point(centerPass.pointX + radiusX * Math.cos(endAnglePass / 2), 
+              (centerPass.pointY - 99) + radiusY * Math.sin(endAnglePass / 2));
+        middleRadiusPass = new Point((middlePointCurvePass.pointX + centerPass.pointX) / 2, (middlePointCurvePass.pointY + (centerPass.pointY - 99)) / 2 );    
         
-        var middlePointCurveFail = new Point(centerFail.pointX + radiusX*Math.cos((endAngleFail + endAnglePass)/2), 
-            (centerFail.pointY-99) + radiusY*Math.sin((endAngleFail + endAnglePass)/2));
-        var middleRadiusFail = new Point( (middlePointCurveFail.pointX + centerFail.pointX) / 2, (middlePointCurveFail.pointY + (centerFail.pointY-99)) / 2 );   
+        middlePointCurveFail = new Point(centerFail.pointX + radiusX * Math.cos((endAngleFail + endAnglePass) / 2), 
+              (centerFail.pointY - 99) + radiusY * Math.sin((endAngleFail + endAnglePass) / 2));
+        middleRadiusFail = new Point((middlePointCurveFail.pointX + centerFail.pointX) / 2, (middlePointCurveFail.pointY + (centerFail.pointY - 99)) / 2 );   
         
         // Draw chart
         for(var i = 0; i < 100; i++) {
@@ -65,14 +75,16 @@ var Piechart = function(options){
             this.drawCurve(this.ctx, i, centerFail.pointX, centerFail.pointY, radiusX, radiusY, endAnglePass, endAngleFail, "#a65344", this.colors[1]);   
         }
         
-        this.drawLine(this.ctx, centerPass, endAnglePass, centerFail, endAngleFail,
-                middlePointCurvePass, middleRadiusPass, middlePointCurveFail, middleRadiusFail);
-        this.drawText(this.ctx, middleRadiusFail, middleRadiusPass, endAngle);
+        this.drawLine(this.ctx);
+        this.drawText(this.ctx);
     }
-    
-    this.drawLine = function(ctx, centerPass, endAnglePass, centerFail, endAngleFail, 
-            middlePointCurvePass, middleRadiusPass, middlePointCurveFail, middleRadiusFail){
 
+    /*
+      Draw line of each data
+      @param: ctx
+      @return: N/A
+    */    
+    this.drawLine = function(ctx) {
         ctx.strokeStyle = "#456aa4";
         ctx.lineWidth = 5;
         ctx.beginPath();
@@ -101,30 +113,45 @@ var Piechart = function(options){
         }
         ctx.stroke();
     }
-    
-    this.drawText = function(ctx, middleRadiusFail, middleRadiusPass, endAngle ) {
+
+    /*
+      Draw text of each data
+      @param: ctx
+      @return: N/A
+    */      
+    this.drawText = function(ctx) {
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        if(this.isFailValueHigher(this.options.data)){
-            ctx.fillText(Math.round(endAngle[0]/(2*Math.PI)*100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX + 60, middleRadiusPass.pointY - 190);  
+        if(this.isFailValueHigher(this.options.data)) {
+            ctx.fillText(Math.round(endAngle[0] / (2 * Math.PI) * 100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX + 60, middleRadiusPass.pointY - 190);  
         }
         else{
-            ctx.fillText(Math.round(endAngle[0]/(2*Math.PI)*100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 190);          
+            ctx.fillText(Math.round(endAngle[0] / (2 * Math.PI) * 100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 190);          
         }
-
-
+        
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        if(this.isFailValueHigher(this.options.data)){
-            ctx.fillText(100 - Math.round(endAngle[0]/(2*Math.PI)*100) + "% CHƯA ĐẠT", middleRadiusFail.pointX - 200, middleRadiusFail.pointY - 130);  
+        if(this.isFailValueHigher(this.options.data)) {
+            ctx.fillText(100 - Math.round(endAngle[0] / (2 * Math.PI) * 100) + "% CHƯA ĐẠT", middleRadiusFail.pointX - 200, middleRadiusFail.pointY - 130);  
         }
         else{
-            ctx.fillText(100 - Math.round(endAngle[0]/(2*Math.PI)*100) + "% CHƯA ĐẠT", middleRadiusFail.pointX +60, middleRadiusFail.pointY - 90);          
-        } 
+            ctx.fillText(100 - Math.round(endAngle[0]/(2 * Math.PI) * 100) + "% CHƯA ĐẠT", middleRadiusFail.pointX + 60, middleRadiusFail.pointY - 90);          
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = this.colors[0];
+        ctx.font = "20px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("BIỂU ĐỒ KHUNG NĂNG LỰC", this.canvas.width / 2, this.canvas.height * 0.9);
     }
-    
+
+    /*
+      Calculate angle of each data
+      @param: data, totalValue
+      @return: N/A
+    */       
     this.calculateAngle = function(data, totalValue) {
         var sliceAngle = [];
         var i = 0;
@@ -137,6 +164,11 @@ var Piechart = function(options){
         return sliceAngle;
     }
 
+    /*
+      Draw curve of each data
+      @param: ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2
+      @return: N/A
+    */  
     this.drawCurve = function(ctx, i, centerX, centerY, radiusX, radiusY, startAngle, endAngle, color1, color2) {
         ctx.fillStyle = color1;
         if(i === 99) {
@@ -148,8 +180,13 @@ var Piechart = function(options){
         ctx.fill();    
     }
 
+    /*
+      Check if Fail value is higher than Pass value
+      @param: data
+      @return: N/A
+    */  
     this.isFailValueHigher = function(data) {
-        if( data["Fail"] > data["Pass"] ) {
+        if(data["Fail"] > data["Pass"]) {
             return true;
         }
         return false;
