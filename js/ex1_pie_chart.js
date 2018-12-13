@@ -27,8 +27,7 @@ var Piechart = function(options) {
       @return: N/A
     */
     this.drawChart = function() {
-        var total_value = 0;
-        var color_index = 0;
+        var totalValue = 0;
         var deltaX;
         var deltaY;
 
@@ -42,11 +41,11 @@ var Piechart = function(options) {
         // Calculate the total value of data
         for (var categ in this.options.data){
             var val = this.options.data[categ];
-            total_value += val;
+            totalValue += val;
         }
 
         // Calculate the endAngle for each data
-        endAngle = this.calculateAngle(this.options.data, total_value);
+        endAngle = this.calculateAngle(this.options.data, totalValue);
         endAnglePass = endAngle[0];
         endAngleFail = endAngle[0] + endAngle[1];
         
