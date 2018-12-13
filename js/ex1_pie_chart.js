@@ -41,7 +41,7 @@ var Piechart = function(options){
         }
         else {
             deltaX = 15;
-            deltaY = -5;  
+            deltaY = -1;  
         }
         
         // Calculate the center point of each curve
@@ -77,16 +77,28 @@ var Piechart = function(options){
         ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(middleRadiusPass.pointX, middleRadiusPass.pointY);
-        ctx.lineTo(middleRadiusPass.pointX - 60, middleRadiusPass.pointY - 60);
-        ctx.lineTo(middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 60);
+        if(this.isFailValueHigher(this.options.data)) {
+            ctx.lineTo(middleRadiusPass.pointX + 60, middleRadiusPass.pointY - 180);
+            ctx.lineTo(middleRadiusPass.pointX + 250, middleRadiusPass.pointY - 180);         
+        }
+        else {
+            ctx.lineTo(middleRadiusPass.pointX - 70, middleRadiusPass.pointY - 180);
+            ctx.lineTo(middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 180);  
+        }
         ctx.stroke(); 
         
         ctx.strokeStyle = "#a65344";
         ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(middleRadiusFail.pointX, middleRadiusFail.pointY);
-        ctx.lineTo(middleRadiusFail.pointX + 60, middleRadiusFail.pointY - 60);
-        ctx.lineTo(middleRadiusFail.pointX + 250, middleRadiusFail.pointY - 60);
+        if(this.isFailValueHigher(this.options.data)) {
+            ctx.lineTo(middleRadiusFail.pointX - 40, middleRadiusFail.pointY - 120);
+            ctx.lineTo(middleRadiusFail.pointX - 200, middleRadiusFail.pointY - 120);            
+        }
+        else {
+            ctx.lineTo(middleRadiusFail.pointX + 60, middleRadiusFail.pointY - 80);
+            ctx.lineTo(middleRadiusFail.pointX + 250, middleRadiusFail.pointY - 80);          
+        }
         ctx.stroke();
     }
     
@@ -94,12 +106,23 @@ var Piechart = function(options){
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        ctx.fillText(Math.round(endAngle[0]/(2*Math.PI)*100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 70);
+        if(this.isFailValueHigher(this.options.data)){
+            ctx.fillText(Math.round(endAngle[0]/(2*Math.PI)*100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX + 60, middleRadiusPass.pointY - 190);  
+        }
+        else{
+            ctx.fillText(Math.round(endAngle[0]/(2*Math.PI)*100) + "% ĐÃ ĐẠT", middleRadiusPass.pointX - 200, middleRadiusPass.pointY - 190);          
+        }
+
 
         ctx.beginPath();
         ctx.fillStyle = "black";
         ctx.font = "20px Arial";
-        ctx.fillText(100 - Math.round(endAngle[0]/(2*Math.PI)*100) + "% CHƯA ĐẠT", middleRadiusFail.pointX +60, middleRadiusFail.pointY - 70);   
+        if(this.isFailValueHigher(this.options.data)){
+            ctx.fillText(100 - Math.round(endAngle[0]/(2*Math.PI)*100) + "% CHƯA ĐẠT", middleRadiusFail.pointX - 200, middleRadiusFail.pointY - 130);  
+        }
+        else{
+            ctx.fillText(100 - Math.round(endAngle[0]/(2*Math.PI)*100) + "% CHƯA ĐẠT", middleRadiusFail.pointX +60, middleRadiusFail.pointY - 90);          
+        } 
     }
     
     this.calculateAngle = function(data, totalValue) {
